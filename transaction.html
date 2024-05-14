@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Management History</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    form {
+        margin-bottom: 20px;
+    }
+    input[type="text"], input[type="date"], select {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    input[type="submit"] {
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+</style>
+</head>
+<body>
+
+<h2>Track Management History</h2>
+
+<form id="transactionForm">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" required>
+
+    <label for="type">Type:</label>
+    <select id="type" name="type" required>
+        <option value="sent">Sent</option>
+        <option value="received">Received</option>
+    </select>
+
+    <label for="amount">Amount:</label>
+    <input type="text" id="amount" name="amount" required>
+
+    <input type="submit" value="Submit">
+</form>
+
+<input type="text" id="searchInput" placeholder="Search by name or date...">
+<button onclick="searchTransactions()">Search</button>
+
+<table id="transactionTable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody id="transactionBody">
+    </tbody>
+</table>
+
+<script>
+    let transactions = [];
+
+    document.getElementById('transactionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        let name = document.getElementById('name').value;
+        let date = document.getElementById('date').value;
+        let type = document.getElementById('type').value;
+        let amount = document.getElementById('amount').value;
+
+        transactions.push({ name, date, type, amount });
+        displayTransactions();
+    });
+
+    function displayTransactions() {
+        let tableBody = document.getElementById('transactionBody');
+        tableBody.innerHTML = '';
+        transactions.forEach(transaction => {
+            let row = tableBody.insertRow();
+            row.insertCell(0).textContent = transaction.name;
+            row.insertCell(1).textContent = transaction.date;
+            row.insertCell(2).textContent = transaction.type;
+            row.insertCell(3).textContent = transaction.amount;
+        });
+    }
+
+    function searchTransactions() {
+        let input = document.getElementById('searchInput').value.toLowerCase();
+        let filteredTransactions = transactions.filter(transaction => {
+            return transaction.name.toLowerCase().includes(input) || transaction.date.includes(input);
+        });
+        displaySearchedTransactions(filteredTransactions);
+    }
+
+    function displaySearchedTransactions(filteredTransactions) {
+        let tableBody = document.getElementById('transactionBody');
+        tableBody.innerHTML = '';
+        filteredTransactions.forEach(transaction => {
+            let row = tableBody.insertRow();
+            row.insertCell(0).textContent = transaction.name;
+            row.insertCell(1).textContent = transaction.date;
+            row.insertCell(2).textContent = transaction.type;
+            row.insertCell(3).textContent = transaction.amount;
+        });
+    }
+</script>
+
+</body>
+</html>
